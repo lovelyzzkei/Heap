@@ -1,0 +1,81 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+class Heap{
+	protected int[] nodes;
+	protected int N = 0;
+	public int size() {return N;}
+	
+	public Heap(int size) {
+		nodes = new int[size + 1];
+	}
+	
+	public void insert(int k) {
+		nodes[++N] = k;
+		upheap(N);
+	}
+	
+	public void upheap(int k) {
+		while (k > 1 && less(k/2, k)) {
+			swap(k/2, k);
+			k = k/2;
+		}
+	}
+	
+	public boolean less(int i, int j) {
+		if (nodes[i] < nodes[j]) return true;
+		return false;
+	}
+	
+	public void swap(int i, int j) {
+		int temp = nodes[i];
+		nodes[i] = nodes[j];
+		nodes[j] = temp;
+	}
+	
+	public int deleteMax() {
+		int max = nodes[1];
+		swap(1, N--);
+		downheap(1);
+		return max;
+	}
+	
+	public void downheap(int k) {
+		while (2 * k <= N) {
+			int j = 2 * k;
+			if (j < N && less(j,j +1)) j++;
+			if (!less(k, j)) break;
+			swap(k, j);
+			k = j;
+		}
+	}
+}
+
+public class Main {
+	
+	public static void main(String[] args) throws Exception {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+		
+		int testcase = Integer.parseInt(in.readLine());
+		Heap maxheap = new Heap(testcase);
+				
+		for (int i = 0; i < testcase; i++) {
+			int order = Integer.parseInt(in.readLine());
+			if (order == 0) {
+				if (maxheap.size() == 0) out.write("0\n");
+				else {
+					out.write(Integer.toString(maxheap.deleteMax()) + "\n");
+				}
+			}
+			else {
+				maxheap.insert(order);
+			}
+		}
+		out.flush();
+		out.close();
+	}
+
+}
